@@ -121,9 +121,17 @@ class ProductImagesSerializer(serializers.ModelSerializer):
 class ProductListSerializer(serializers.ModelSerializer):
     subcategory = SubCategorySimpleSerializer()
     product_img = ProductImagesSerializer(many=True, read_only=True)
+    get_avg_rating = serializers.SerializerMethodField()
+    get_count_rating = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ['id', 'subcategory', 'product_name', 'product_img', 'price']
+        fields = ['id', 'subcategory', 'product_name', 'product_img', 'price', 'get_avg_rating', 'get_count_rating']
+
+    def get_avg_rating(self, obj):
+        return obj.get_avg_rating()    
+
+    def get_count_rating(self, obj):
+        return obj.get_count_rating()
 
 
 class CartItemSerializer(serializers.ModelSerializer):

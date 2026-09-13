@@ -34,7 +34,7 @@ class SubCategory(models.Model):
     subcategory_image = models.ImageField(upload_to='subcategory_images/')
 
     def __str__(self):
-            return f'{self.category.category_name} - {self.subcategory_name}'
+        return f'{self.category.category_name} - {self.subcategory_name}'
 
 
 class Product(models.Model):
@@ -47,7 +47,16 @@ class Product(models.Model):
     created_date = models.DateField(auto_now_add=True)
 
     def __str__(self):
-            return f'{self.subcategory.subcategory_name} - {self.product_name}'
+        return f'{self.subcategory.subcategory_name} - {self.product_name}'
+
+    def get_avg_rating(self):
+        ratings = self.product_review.all()
+        if ratings.exists():
+            return round(sum([i.stars for i in ratings]) / ratings.count(), 1)
+        return 0
+
+    def get_count_rating(self):
+        return self.product_review.count()
 
 
 class Product_images(models.Model):
@@ -64,7 +73,7 @@ class Review(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-         return f'{self.user.first_name} - comment'
+        return f'{self.user.first_name or self.user.username} - comment'
 
 
 class Cart(models.Model):

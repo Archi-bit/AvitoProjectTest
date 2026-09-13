@@ -8,6 +8,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import AnonymousUser
+from .pagination import *
 
 
 
@@ -90,6 +91,7 @@ class ProductListAPIView(generics.ListAPIView):
     filterset_class = ProductFilter
     search_fields = ['product_name']
     ordering_fields = ['created_date', 'price']
+    pagination_class = ProductPagination
 
 
 class ProductDetailAPIView(generics.RetrieveAPIView):
@@ -100,9 +102,8 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-
-from django.contrib.auth.models import AnonymousUser
 
 class CartAPIView(generics.RetrieveAPIView):
     serializer_class = CartSerializer
@@ -114,6 +115,7 @@ class CartAPIView(generics.RetrieveAPIView):
         cart, created = Cart.objects.get_or_create(user=self.request.user)
         serializer = self.get_serializer(cart)
         return Response(serializer.data)
+
 
 class CartItemViewSet(viewsets.ModelViewSet):
     queryset = CartItem.objects.all()
@@ -129,6 +131,7 @@ class CartItemViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         cart, created = Cart.objects.get_or_create(user=self.request.user)
         serializer.save(cart=cart)
+
 
 class FavoriteAPIView(generics.RetrieveAPIView):
     serializer_class = FavoriteSerializer
