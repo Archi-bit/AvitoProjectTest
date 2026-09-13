@@ -30,7 +30,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - /home/ubuntu/AvitoPython48/my_site/staticfiles:/app/static
+      - /home/ubuntu/AvitoProjectTest/my_site/staticfiles:/app/static
       - media_volume:/app/media
     depends_on:
       - web
